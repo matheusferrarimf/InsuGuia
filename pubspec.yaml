@@ -1,0 +1,14 @@
+name: insuguia_mobile
+description: Protótipo InsuGuia - cenário não crítico
+publish_to: 'none'
+environment:
+  sdk: ">=2.18.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: ^2.30.0
+  firebase_auth: ^4.6.0
+  cloud_firestore: ^4.7.0
+  provider: ^6.0.5
+  intl: ^0.18.0

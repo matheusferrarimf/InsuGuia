@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1058586227189",
+    "project_id": "insuguia-f26e3",
+    "storage_bucket": "insuguia-f26e3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1058586227189:android:819379bba48bbb5bbcb0bc",
+        "android_client_info": {
+          "package_name": "com.unidavi.insuguia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDK9A9om07R7lecbfXdzX4b5V5JTBUfzng"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1058586227189:android:e8aa5e62f8348b9bbcb0bc",
+        "android_client_info": {
+          "package_name": "com.unidavi.insuguiaa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDK9A9om07R7lecbfXdzX4b5V5JTBUfzng"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

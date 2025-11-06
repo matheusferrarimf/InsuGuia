@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+//sofy: adicionou, o ultimo n funciona
+import 'package:firebase_core/firebase_core.dart';
+import '../firebase_options/firebase_options.dart';
+import 'app.dart';
 
 void main() {
   runApp(const MyApp());
@@ -119,4 +123,13 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+}
+
+//sofy: adicionou mas não funciona
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(MyApp());
 }
