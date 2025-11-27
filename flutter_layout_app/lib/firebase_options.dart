@@ -17,29 +17,17 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -58,6 +46,44 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1058586227189',
     projectId: 'insuguia-f26e3',
     storageBucket: 'insuguia-f26e3.firebasestorage.app',
+  );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyDxlLlTR3M3UIQwhmK8kkPi8ML3M86xh3Q',
+    appId: '1:1058586227189:web:638e98a916a302f8bcb0bc',
+    messagingSenderId: '1058586227189',
+    projectId: 'insuguia-f26e3',
+    authDomain: 'insuguia-f26e3.firebaseapp.com',
+    storageBucket: 'insuguia-f26e3.firebasestorage.app',
+    measurementId: 'G-BRB2P6ZCGF',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyCSfM1S5vB1V4RfTL1en1UPE-_-CyYN0Nk',
+    appId: '1:1058586227189:ios:c9e29b3c1777928fbcb0bc',
+    messagingSenderId: '1058586227189',
+    projectId: 'insuguia-f26e3',
+    storageBucket: 'insuguia-f26e3.firebasestorage.app',
+    iosBundleId: 'com.example.flutterLayoutApp',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyCSfM1S5vB1V4RfTL1en1UPE-_-CyYN0Nk',
+    appId: '1:1058586227189:ios:c9e29b3c1777928fbcb0bc',
+    messagingSenderId: '1058586227189',
+    projectId: 'insuguia-f26e3',
+    storageBucket: 'insuguia-f26e3.firebasestorage.app',
+    iosBundleId: 'com.example.flutterLayoutApp',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyDxlLlTR3M3UIQwhmK8kkPi8ML3M86xh3Q',
+    appId: '1:1058586227189:web:eaf1fa65f6c1a32cbcb0bc',
+    messagingSenderId: '1058586227189',
+    projectId: 'insuguia-f26e3',
+    authDomain: 'insuguia-f26e3.firebaseapp.com',
+    storageBucket: 'insuguia-f26e3.firebasestorage.app',
+    measurementId: 'G-1QRKYBRFLH',
   );
 
 }

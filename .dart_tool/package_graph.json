@@ -10,11 +10,20 @@
         "cloud_firestore",
         "firebase_auth",
         "firebase_core",
+        "fl_chart",
         "flutter",
         "intl",
         "provider"
       ],
       "devDependencies": []
+    },
+    {
+      "name": "fl_chart",
+      "version": "0.68.0",
+      "dependencies": [
+        "equatable",
+        "flutter"
+      ]
     },
     {
       "name": "intl",
@@ -79,6 +88,14 @@
         "meta",
         "sky_engine",
         "vector_math"
+      ]
+    },
+    {
+      "name": "equatable",
+      "version": "2.0.7",
+      "dependencies": [
+        "collection",
+        "meta"
       ]
     },
     {
