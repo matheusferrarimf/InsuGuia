@@ -6,7 +6,22 @@ class PatientService {
       FirebaseFirestore.instance.collection('patients');
 
   Future<void> addPatient(Patient p) async {
-    await _collection.doc(p.id).set(p.toMap());
+    final doc = _collection.doc(); // cria ID automático
+
+    final newPatient = Patient(
+      id: doc.id,
+      name: p.name,
+      age: p.age,
+      diagnosis: p.diagnosis,
+      insulinType: p.insulinType,
+      weight: p.weight,
+      targetMin: p.targetMin,
+      targetMax: p.targetMax,
+      lastGlycemia: p.lastGlycemia,
+      lastUpdate: p.lastUpdate,
+    );
+
+    await doc.set(newPatient.toMap());
   }
 
   Future<void> deletePatient(String id) async {
@@ -20,4 +35,15 @@ class PatientService {
       }).toList();
     });
   }
+  
+  Future<void> updateGlycemia({
+    required String id,
+    required int glycemia,
+  }) async {
+    await _collection.doc(id).update({
+      'lastGlycemia': glycemia,
+      'lastUpdate': Timestamp.now(),
+    });
+  }
+  
 }

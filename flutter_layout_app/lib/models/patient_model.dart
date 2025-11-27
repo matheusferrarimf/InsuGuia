@@ -59,4 +59,8 @@ class Patient {
           : null,
     };
   }
+
+  double get basalDose => weight * 0.3;
+  double get correctionFactor => 40; 
+
 }
