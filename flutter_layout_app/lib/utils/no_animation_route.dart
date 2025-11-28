@@ -7,6 +7,6 @@ class NoAnimationRoute<T> extends MaterialPageRoute<T> {
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
-    return child; // remove qualquer animação
+    return child;
   }
 }

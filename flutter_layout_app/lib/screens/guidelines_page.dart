@@ -5,9 +5,6 @@ import 'insulin_calculator_page.dart';
 class GuidelinesPage extends StatelessWidget {
   const GuidelinesPage({super.key});
 
-  // -------------------------------
-  //          MENU UNIVERSAL
-  // -------------------------------
   Widget _buildTopMenu(BuildContext context, {required int selectedIndex}) {
     final items = ["Pacientes", "Calculadora", "Detalhes", "Diretrizes"];
 
@@ -53,8 +50,6 @@ class GuidelinesPage extends StatelessWidget {
     );
   }
 
-  //---------------------------------------------------------------------
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +57,6 @@ class GuidelinesPage extends StatelessWidget {
       body: Column(
         children: [
           _buildTopMenu(context, selectedIndex: 3),
-
           Expanded(
             child: ListView(
               padding: const EdgeInsets.all(16),

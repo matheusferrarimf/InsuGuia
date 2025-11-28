@@ -45,5 +45,5 @@ class PatientService {
       'lastUpdate': Timestamp.now(),
     });
   }
-  
+
 }

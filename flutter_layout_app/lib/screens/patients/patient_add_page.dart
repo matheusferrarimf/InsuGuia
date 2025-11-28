@@ -3,10 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_layout_app/models/patient_model.dart';
 import 'package:flutter_layout_app/services/patient_service.dart';
 
-// import 'package:flutter/material.dart';
-// import 'package:flutter_layout_app/models/patient_model.dart';
-// import 'package:flutter_layout_app/services/patient_service.dart';
-
 class AddPatientDialog extends StatefulWidget {
   const AddPatientDialog({super.key});
 
@@ -34,9 +30,6 @@ class _AddPatientDialogState extends State<AddPatientDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //-----------------------------------------------------
-            // Nome completo
-            //-----------------------------------------------------
             const Text("Nome Completo"),
             const SizedBox(height: 6),
             TextField(
@@ -47,10 +40,6 @@ class _AddPatientDialogState extends State<AddPatientDialog> {
               onChanged: (v) => name = v,
             ),
             const SizedBox(height: 16),
-
-            //-----------------------------------------------------
-            // Idade + Peso na mesma linha
-            //-----------------------------------------------------
             Row(
               children: [
                 Expanded(
@@ -96,10 +85,6 @@ class _AddPatientDialogState extends State<AddPatientDialog> {
               ],
             ),
             const SizedBox(height: 16),
-
-            //-----------------------------------------------------
-            // Diagnóstico
-            //-----------------------------------------------------
             const Text("Diagnóstico"),
             const SizedBox(height: 6),
             TextField(
@@ -110,10 +95,6 @@ class _AddPatientDialogState extends State<AddPatientDialog> {
               onChanged: (v) => diagnosis = v,
             ),
             const SizedBox(height: 16),
-
-            //-----------------------------------------------------
-            // Insulin Type
-            //-----------------------------------------------------
             const Text("Esquema de Insulina"),
             const SizedBox(height: 6),
             DropdownButtonFormField<String>(
@@ -132,10 +113,6 @@ class _AddPatientDialogState extends State<AddPatientDialog> {
           ],
         ),
       ),
-
-      //-----------------------------------------------------
-      // Botões
-      //-----------------------------------------------------
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),

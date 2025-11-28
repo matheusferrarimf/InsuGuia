@@ -5,32 +5,16 @@ import '../insulin_calculator_page.dart';
 import '../guidelines_page.dart';
 import '../../utils/no_animation_route.dart';
 
-class PatientDetailsPage extends StatefulWidget {
+class PatientDetailsPage extends StatelessWidget {
   final Patient patient;
 
   const PatientDetailsPage({super.key, required this.patient});
 
   @override
-  State<PatientDetailsPage> createState() => _PatientDetailsPageState();
-}
-
-class _PatientDetailsPageState extends State<PatientDetailsPage>
-    with SingleTickerProviderStateMixin {
-  late TabController tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    tabController = TabController(length: 3, vsync: this);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final p = widget.patient;
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(p.name),
+        title: Text(patient.name),
       ),
 
       body: SingleChildScrollView(
@@ -38,27 +22,25 @@ class _PatientDetailsPageState extends State<PatientDetailsPage>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // -------------------------------------
-            // MENU SUPERIOR
-            // -------------------------------------
             _topMenu(context),
 
             const SizedBox(height: 20),
 
-            // -------------------------
-            // CABEÇALHO DO PACIENTE
-            // -------------------------
+            // -------------------------------
+            // CARD PRINCIPAL DO PACIENTE
+            // -------------------------------
             Card(
               elevation: 2,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+                borderRadius: BorderRadius.circular(12),
+              ),
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      p.name,
+                      patient.name,
                       style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
@@ -67,7 +49,7 @@ class _PatientDetailsPageState extends State<PatientDetailsPage>
 
                     const SizedBox(height: 8),
                     const Text(
-                      "Detalhes completos e histórico do paciente",
+                      "Informações do paciente",
                       style: TextStyle(color: Colors.grey),
                     ),
 
@@ -76,12 +58,12 @@ class _PatientDetailsPageState extends State<PatientDetailsPage>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        _infoColumn("Idade", "${p.age} anos"),
-                        _infoColumn("Peso", "${p.weight} kg"),
+                        _infoColumn("Idade", "${patient.age} anos"),
+                        _infoColumn("Peso", "${patient.weight} kg"),
                         _infoColumn(
                           "Última Glicemia",
-                          p.lastGlycemia != null
-                              ? "${p.lastGlycemia} mg/dL"
+                          patient.lastGlycemia != null
+                              ? "${patient.lastGlycemia} mg/dL"
                               : "--",
                           highlight: true,
                         ),
@@ -91,72 +73,15 @@ class _PatientDetailsPageState extends State<PatientDetailsPage>
                 ),
               ),
             ),
-
-            const SizedBox(height: 24),
-
-            // -------------------------------------
-            // TABS INTERNAS
-            // -------------------------------------
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: TabBar(
-                controller: tabController,
-                labelColor: Colors.blue,
-                unselectedLabelColor: Colors.black54,
-                indicator: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                tabs: const [
-                  Tab(text: "Controle Glicêmico"),
-                  Tab(text: "Insulinoterapia"),
-                  Tab(text: "Dados Clínicos"),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            SizedBox(
-              height: 400,
-              child: TabBarView(
-                controller: tabController,
-                children: [
-                  _glycemiaTab(),
-                  _placeholder("Insulinoterapia"),
-                  _placeholder("Dados Clínicos"),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            Row(
-              children: [
-                Expanded(child: _metricCard("Média 24h", "150 mg/dL")),
-                const SizedBox(width: 12),
-                Expanded(
-                    child: _metricCard("Tempo no Alvo", "60%",
-                        color: Colors.green)),
-                const SizedBox(width: 12),
-                Expanded(
-                    child: _metricCard("Eventos Hipoglicemia", "0",
-                        color: Colors.red)),
-              ],
-            ),
           ],
         ),
       ),
     );
   }
 
-  // =====================================================================
-  // MENU SUPERIOR — EXATAMENTE COMO NO PRINT
-  // =====================================================================
-
+  // -------------------------------------
+  //            TOP MENU
+  // -------------------------------------
   Widget _topMenu(BuildContext context) {
     final selected = 2; // Detalhes
 
@@ -179,10 +104,9 @@ class _PatientDetailsPageState extends State<PatientDetailsPage>
           final isSelected = index == selected;
 
           return GestureDetector(
-            onTap: () => _navigateTo(index),
+            onTap: () => _navigateTo(context, index),
             child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: isSelected
                   ? BoxDecoration(
                       color: Colors.white,
@@ -210,9 +134,11 @@ class _PatientDetailsPageState extends State<PatientDetailsPage>
     );
   }
 
-  // ------------------- MENU SUPERIOR (sem animação) --------------------
-  void _navigateTo(int index) {
-    if (index == 2) return; // já está na tela
+  // -------------------------------------
+  //      NAVEGAÇÃO DO MENU
+  // -------------------------------------
+  void _navigateTo(BuildContext context, int index) {
+    if (index == 2) return;
 
     if (index == 0) {
       Navigator.pushReplacement(
@@ -236,17 +162,14 @@ class _PatientDetailsPageState extends State<PatientDetailsPage>
     }
   }
 
-  // =====================================================================
-  // COMPONENTES AUXILIARES
-  // =====================================================================
-
-  Widget _infoColumn(String label, String value,
-      {bool highlight = false}) {
+  // -------------------------------------
+  //    WIDGET DE INFORMAÇÃO DO CARD
+  // -------------------------------------
+  Widget _infoColumn(String label, String value, {bool highlight = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label,
-            style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),
         Container(
           padding: highlight ? const EdgeInsets.all(6) : null,
@@ -260,55 +183,12 @@ class _PatientDetailsPageState extends State<PatientDetailsPage>
             value,
             style: TextStyle(
               fontSize: 16,
-              fontWeight:
-                  highlight ? FontWeight.bold : FontWeight.normal,
+              fontWeight: highlight ? FontWeight.bold : FontWeight.normal,
               color: highlight ? Colors.red : Colors.black,
             ),
           ),
         ),
       ],
-    );
-  }
-
-  Widget _glycemiaTab() {
-    return const Center(
-      child: Text("📊 Gráfico será adicionado aqui"),
-    );
-  }
-
-  Widget _placeholder(String text) {
-    return Center(
-      child: Text("Conteúdo de $text ainda não implementado"),
-    );
-  }
-
-  Widget _metricCard(String title, String value, {Color? color}) {
-    return Card(
-      elevation: 2,
-      shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                )),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 18,
-                color: color ?? Colors.blue,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

@@ -26,21 +26,13 @@ class _InsulinCalculatorPageState extends State<InsulinCalculatorPage> {
 
   Patient? get patient => SelectedPatientService().selected;
 
-  // -------------------------------
-  // Cálculo da dose de correção
-  // -------------------------------
   void calculateCorrectionDose() {
     if (patient == null) return;
-
     final glycemia = double.tryParse(glycemiaController.text);
     if (glycemia == null) return;
-
     final targetMid = ((patient!.targetMin + patient!.targetMax) / 2);
-
-    final dose = ((glycemia - targetMid) / 50).clamp(0, 40); // <<< AJUSTE
-
+    final dose = ((glycemia - targetMid) / 50).clamp(0, 40); // soldado 40, provavelmente varia de paciente pra paciente
     String rec = '';
-
     if (glycemia < 70) {
       rec = '⚠️ Hipoglicemia detectada. Administrar 15g de carboidratos...';
     } else if (glycemia < patient!.targetMin) {
@@ -54,18 +46,15 @@ class _InsulinCalculatorPageState extends State<InsulinCalculatorPage> {
     } else {
       rec = '🚨 Hiperglicemia importante. Dose: ${dose.round()} UI.';
     }
-
     setState(() {
       calculatedDose = dose.toDouble();
       recommendation = rec;
     });
   }
 
-  // -------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
     final isDesktop = MediaQuery.of(context).size.width > 900;
-
     return Scaffold(
       appBar: AppBar(title: const Text("Calculadora de Insulina")),
       body: Column(
@@ -97,9 +86,6 @@ class _InsulinCalculatorPageState extends State<InsulinCalculatorPage> {
     );
   }
 
-  // -------------------------------------------------------------------
-  //                           COLUNA ESQUERDA
-  // -------------------------------------------------------------------
   Widget _buildLeftColumn() {
     return Column(
       children: [
@@ -110,9 +96,6 @@ class _InsulinCalculatorPageState extends State<InsulinCalculatorPage> {
     );
   }
 
-  // -------------------------------------------------------------------
-  //                           COLUNA DIREITA
-  // -------------------------------------------------------------------
   Widget _buildRightColumn() {
     return Column(
       children: [
@@ -123,7 +106,6 @@ class _InsulinCalculatorPageState extends State<InsulinCalculatorPage> {
     );
   }
 
-  // --------------------- MENU UNIVERSAL -----------------------
   Widget _buildTopMenu(BuildContext context, {required int selectedIndex}) {
     final items = ["Pacientes", "Calculadora", "Detalhes", "Diretrizes"];
 
@@ -170,9 +152,6 @@ class _InsulinCalculatorPageState extends State<InsulinCalculatorPage> {
     );
   }
 
-  // -------------------------------------------------------------------
-  //                           PACIENTE
-  // -------------------------------------------------------------------
   Widget _buildPatientInfoCard() {
     if (patient == null) {
       return const Card(
@@ -210,9 +189,6 @@ class _InsulinCalculatorPageState extends State<InsulinCalculatorPage> {
     );
   }
 
-  // -------------------------------------------------------------------
-  //                           CALCULADORA
-  // -------------------------------------------------------------------
   Widget _buildCalculatorCard() {
     return Card(
       elevation: 2,
@@ -305,9 +281,6 @@ class _InsulinCalculatorPageState extends State<InsulinCalculatorPage> {
     );
   }
 
-  // -------------------------------------------------------------------
-  //                         ESQUEMA DE INSULINA
-  // -------------------------------------------------------------------
   Widget _buildInsulinSchemeCard() {
     if (patient == null) return Container();
 
@@ -335,9 +308,6 @@ class _InsulinCalculatorPageState extends State<InsulinCalculatorPage> {
     );
   }
 
-  // -------------------------------------------------------------------
-  //                           PROTOCOLO
-  // -------------------------------------------------------------------
   Widget _buildProtocolCard() {
     return Card(
       child: Padding(
@@ -357,19 +327,14 @@ class _InsulinCalculatorPageState extends State<InsulinCalculatorPage> {
     );
   }
 
-  // -------------------------------------------------------------------
-  //                     SALVAR GLICEMIA NO FIREBASE
-  // -------------------------------------------------------------------
   void saveGlycemiaToDatabase() async {
     final patient = selectedService.selected;
-
     if (patient == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Nenhum paciente selecionado!")),
       );
       return;
     }
-
     final gly = int.tryParse(glycemiaController.text);
     if (gly == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -377,12 +342,10 @@ class _InsulinCalculatorPageState extends State<InsulinCalculatorPage> {
       );
       return;
     }
-
     await patientService.updateGlycemia(
       id: patient.id,
       glycemia: gly,
     );
-
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Glicemia salva com sucesso.")),
     );

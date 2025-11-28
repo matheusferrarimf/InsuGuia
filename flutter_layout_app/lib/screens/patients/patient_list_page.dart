@@ -21,9 +21,7 @@ class _PatientListPageState extends State<PatientListPage> {
 
   final SelectedPatientService selectedService = SelectedPatientService();
 
-  // -----------------------------
   //     NAVEGAÇÃO DO MENU
-  // -----------------------------
   void _navigate(BuildContext context, int index) {
     if (index == 0) return; // Já estamos na lista
 
@@ -69,7 +67,6 @@ class _PatientListPageState extends State<PatientListPage> {
       body: Column(
         children: [
           _buildTopMenu(context, selectedIndex: 0),
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             child: Row(
@@ -88,7 +85,6 @@ class _PatientListPageState extends State<PatientListPage> {
               ],
             ),
           ),
-
           Expanded(
             child: StreamBuilder<List<Patient>>(
               stream: service.getPatients(),
@@ -96,14 +92,11 @@ class _PatientListPageState extends State<PatientListPage> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
-
                 if (!snapshot.hasData || snapshot.data == null) {
                   return const Center(
                       child: Text("Erro ao carregar pacientes."));
                 }
-
                 final patients = snapshot.data!;
-
                 if (patients.isEmpty) {
                   selectedService.selected = null;
                   return const Center(
@@ -113,8 +106,7 @@ class _PatientListPageState extends State<PatientListPage> {
                     ),
                   );
                 }
-
-                // Seleciona automaticamente o primeiro se nenhum está selecionado
+                // Seleciona automaticamente o primeiro se não tiver nenhum selecionado
                 if (selectedService.selected == null) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     if (mounted) {
@@ -124,9 +116,7 @@ class _PatientListPageState extends State<PatientListPage> {
                     }
                   });
                 }
-
                 final bool isDesktop = MediaQuery.of(context).size.width > 800;
-
                 if (!isDesktop) {
                   return ListView.builder(
                     padding: const EdgeInsets.all(16),
@@ -136,7 +126,6 @@ class _PatientListPageState extends State<PatientListPage> {
                     },
                   );
                 }
-
                 return GridView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: patients.length,
@@ -158,118 +147,134 @@ class _PatientListPageState extends State<PatientListPage> {
     );
   }
 
-  // ----------------------------------------
-  //       CARD DO PACIENTE (selecionável)
-  // ----------------------------------------
+  // Cards
   Widget _buildPatientCard(Patient p, {required bool isDesktop}) {
-    final bool isSelected = selectedService.selected?.id == p.id;
+  final bool isSelected = selectedService.selected?.id == p.id;
 
-    final double cardHeight = isDesktop ? double.infinity : 130;
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedService.selected = p;
-        });
-      },
-      child: Container(
-        height: cardHeight == double.infinity ? null : cardHeight,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: isSelected ? Colors.blueAccent : Colors.transparent,
-            width: isSelected ? 2 : 0,
-          ),
-          borderRadius: BorderRadius.circular(12),
+  return GestureDetector(
+    onTap: () {
+      setState(() {
+        selectedService.selected = p;
+      });
+    },
+    child: Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: isSelected ? Colors.blueAccent : Colors.transparent,
+          width: isSelected ? 2 : 0,
         ),
-        child: Card(
-          elevation: 3,
-          margin: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 26,
-                        backgroundColor:
-                            isSelected ? Colors.blueAccent : Colors.grey.shade300,
-                        child: Text(
-                          _initials(p.name),
+              // -------------------------
+              // Linha superior -> Nome + Lixeira
+              // -------------------------
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // NOME + IDADE + PESO
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          p.name,
                           style: const TextStyle(
-                            color: Colors.white,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ),
+                        const SizedBox(height: 4),
+                        Text(
+                          "${p.age} anos • ${p.weight} kg",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
 
-                      const SizedBox(width: 12),
+                        Text(
+                          p.diagnosis,
+                          style: const TextStyle(fontSize: 15),
+                        ),
 
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              p.name,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                        const SizedBox(height: 8),
+
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade50,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            p.insulinType,
+                            style: const TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  //   ÍCONE DE LIXEIRA
+                  InkWell(
+                    onTap: () async {
+                      final confirm = await showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text("Excluir paciente"),
+                          content: Text(
+                              "Tem certeza que deseja excluir ${p.name}?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, false),
+                              child: const Text("Cancelar"),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, true),
+                              child: const Text(
+                                "Excluir",
+                                style: TextStyle(color: Colors.red),
                               ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Text("Idade: ${p.age}"),
-                                const SizedBox(width: 10),
-                                Text("Peso: ${p.weight} kg"),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              "Diagnóstico: ${p.diagnosis}",
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),
-                      ),
+                      );
 
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: p.lastGlycemia == null
-                                  ? Colors.grey
-                                  : p.lastGlycemia! > p.targetMax
-                                      ? Colors.red.shade400
-                                      : Colors.green.shade400,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              p.lastGlycemia?.toString() ?? "--",
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                      if (confirm == true) {
+                        await service.deletePatient(p.id);
+
+                        if (selectedService.selected?.id == p.id) {
+                          selectedService.selected = null;
+                        }
+
+                        if (mounted) setState(() {});
+                      }
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.all(6.0),
+                      child: Icon(Icons.delete_outline,
+                          color: Colors.grey, size: 22),
+                    ),
                   ),
-                ),
+                ],
               ),
 
-              // Botão inferior ocupando toda a largura
+              const SizedBox(height: 16),
+
+              // -------------------------
+              // BOTÃO VER DETALHES
+              // -------------------------
               SizedBox(
                 width: double.infinity,
                 child: TextButton.icon(
@@ -279,25 +284,29 @@ class _PatientListPageState extends State<PatientListPage> {
                       NoAnimationRoute(page: PatientDetailsPage(patient: p)),
                     );
                   },
-                  icon: const Icon(Icons.open_in_new),
-                  label: const Text("Ver detalhes"),
+                  icon: const Icon(Icons.show_chart),
+                  label: const Text(
+                    "Ver Detalhes",
+                    style: TextStyle(fontSize: 16),
+                  ),
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.blueAccent,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        bottom: Radius.circular(12),
-                      ),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    foregroundColor: Colors.black87,
+                    backgroundColor: Colors.grey.shade200,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   String _initials(String name) {
     final parts = name.trim().split(RegExp(r'\s+'));
@@ -306,9 +315,6 @@ class _PatientListPageState extends State<PatientListPage> {
     return (parts[0][0] + parts[1][0]).toUpperCase();
   }
 
-  // ----------------------------------------
-  //           MENU SUPERIOR (WIDGET)
-  // ----------------------------------------
   Widget _buildTopMenu(BuildContext context, {required int selectedIndex}) {
     final items = ["Pacientes", "Calculadora", "Detalhes", "Diretrizes"];
 
